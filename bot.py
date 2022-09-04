@@ -31,7 +31,7 @@ scraper = create_scraper(browser=WEB_BROWSER)
 def printt(*values):
 	rep = ""
 	if len(values) == 1:
-		rep += values[0]
+		rep += str(values[0])
 	else:
 		for c in values:
 			rep += f"{c}\n"
