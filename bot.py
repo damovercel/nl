@@ -4,6 +4,7 @@ from telegram import InputMediaPhoto
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 from os import environ, mkdir
 from lxml.html import fromstring
+from time import sleep
 from json import load
 from cloudscraper import create_scraper
 # from urllib.parse import quote
@@ -61,6 +62,7 @@ def command_demo(update, context):
 	di_list = []
 	ord_list = []
 	for element in raw_tree.xpath('//*[@class="main version-chap no-volumn"]')[0]:
+		sleep(25)
 		print(element)
 		printt(element)
 		if element.tag == "li":
