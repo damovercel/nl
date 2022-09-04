@@ -105,7 +105,7 @@ if __name__ == '__main__':
 	bot = updater.bot
 
 	dispatcher.add_handler(CommandHandler(command="start", callback=command_start))
-	dispatcher.add_handler(CommandHandler(command="start", callback=command_demo))
+	dispatcher.add_handler(CommandHandler(command="demo", callback=command_demo))
 
 	bot.send_message(chat_id=DEBUG_ID, text="Polling!!!")
 	print("Polling!!!")
