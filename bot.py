@@ -54,11 +54,15 @@ def command_demo(update, context):
 	#print(update)
 	bot.send_message(chat_id=chatId, text="Working")
 	raw_page = scraper.get(url=f'{URL_NARTAG}/el-principio-despues-del-fin-novela')
+	printt(raw_page.status_code)
+	print(raw_page.status_code)
 
 	raw_tree = fromstring(html=raw_page.content)
 	di_list = []
 	ord_list = []
 	for element in raw_tree.xpath('//*[@class="main version-chap no-volumn"]')[0]:
+		print(element)
+		printt(element)
 		if element.tag == "li":
 			if element.attrib["class"] == "wp-manga-chapter    ":
 				di_list.append([element[0].text, element[0].attrib["href"]])
