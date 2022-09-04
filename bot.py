@@ -73,6 +73,7 @@ def command_demo(update, context):
 	inde = []
 	for index, capitle in enumerate(ord_list):
 		print(capitle)
+		printt(capitle)
 		raw_cap = scraper.get(url=capitle[1])
 		raw_cap_tree = fromstring(html=raw_cap.content)
 		exec(f'cap_{index} = epub.EpubHtml(title=capitle[0], file_name=f"{capitle[0]}.xhtml")')
