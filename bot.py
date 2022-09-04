@@ -62,7 +62,7 @@ def command_demo(update, context):
 	di_list = []
 	ord_list = []
 	for element in raw_tree.xpath('//*[@class="main version-chap no-volumn"]')[0]:
-		sleep(25)
+		sleep(3)
 		print(element)
 		printt(element)
 		if element.tag == "li":
