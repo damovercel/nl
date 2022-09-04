@@ -84,7 +84,7 @@ def command_demo(update, context):
 		inde.append(epub.Link(f"{capitle[0]}.xhtml", capitle[0], "arbol"))
 		caps.append(f"cap_{index}")
 		cap_text = raw_cap_tree.xpath('//*[@class="text-left"]')[0].text_content()
-		exec(f'cap_{index}.content = cap_text')
+		exec(f'cap_{index}.content = {cap_text}')
 
 		bu.add_item(f"cap_{index}")
 
