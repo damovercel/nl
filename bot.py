@@ -103,7 +103,7 @@ def command_demo(update, context):
 		caps[cap_name] = epub.EpubHtml(title=cap_name, file_name=f"{cap_name}.xhtml")
 		#caps[cap_name].content = tostring(, encoding="unicode").strip("\n").strip()
 		caps[cap_name].content = this_cap
-		print(caps[cap_name].content)
+		#print(caps[cap_name].content)
 		#inde.append(epub.Link(f"{cap_name}.xhtml", cap_name, "arbol"))
 		#caps.append(f"cap_{index}")
 
