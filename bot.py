@@ -62,17 +62,20 @@ def command_demo(update, context):
 	di_list = []
 	ord_list = []
 	for element in raw_tree.xpath('//*[@class="main version-chap no-volumn"]')[0]:
-		sleep(3)
+		sleep(1)
 		print(element)
 		printt(element)
 		if element.tag == "li":
 			if element.attrib["class"] == "wp-manga-chapter    ":
 				di_list.append([element[0].text, element[0].attrib["href"]])
+				printt(element[0].text, element[0].attrib["href"])
 	ord_list = di_list[::-1]
 	from ebooklib import epub
 
 	bu = epub.EpubBook()
 	bu.set_title("la vida despues de la muerte")
+	cover = scraper.get(url="https://nartag.com/wp-content/uploads/2021/02/Portada-1-683x1024.jpg", stream=True)
+	bu.set_cover("Cover.jpg", content=cover.content)
 	bu.set_language("es")
 	bu.add_author("d")
 	caps = []
@@ -93,12 +96,14 @@ def command_demo(update, context):
 	bu.add_item(epub.EpubNcx())
 	bu.add_item(epub.EpubNav())
 	bu.toc = tuple(inde)
+	print(tuple(inde))
+	print(["cover"] + caps)
 	#bu.toc = (epub.Link("chap_195.xhtml", "chap_195", "arbol"),)
 	style = 'BODY {color: white;}'
 	nav_css = epub.EpubItem(uid="style_nav", file_name="style/nav.css", media_type="text/css", content=style)
 	bu.add_item(nav_css)
 
-	bu.spine = caps
+	bu.spine = ["cover"] + caps
 
 	epub.write_epub("vida.epub", bu)
 	bot.send_document(chat_id=chatId, document=open(file="./vida.epub", mode="rb"))
