@@ -61,15 +61,16 @@ def command_demo(update, context):
 	raw_tree = fromstring(html=raw_page.content)
 	di_list = []
 	ord_list = []
-	for element in raw_tree.xpath('//*[@class="main version-chap no-volumn"]')[0]:
-		sleep(2)
+	for ind, element in enumerate(raw_tree.xpath('//*[@class="main version-chap no-volumn"]')[0]):
+		if ind > 2:
+			continue
 		print(element)
-		printt(element)
+		#printt(element)
 		if element.tag == "li":
-			if element.attrib["class"] == "wp-manga-chapter    ":
-				di_list.append([element[0].text, element[0].attrib["href"]])
-				printt(element[0].text, element[0].attrib["href"])
-	ord_list = di_list[::-1]
+			if "wp-manga-chapter" in element.attrib["class"]:
+				a = element.xpath('.//a')[0]
+				di_list.append([a.text, a.attrib["href"]])
+				#printt(a.text, a.attrib["href"])
 	from ebooklib import epub
 
 	bu = epub.EpubBook()
@@ -78,35 +79,57 @@ def command_demo(update, context):
 	bu.set_cover("Cover.jpg", content=cover.content)
 	bu.set_language("es")
 	bu.add_author("d")
-	caps = []
-	inde = []
-	for index, capitle in enumerate(ord_list):
-		print(capitle)
-		printt(capitle)
-		raw_cap = scraper.get(url=capitle[1])
+	caps = {}
+	#inde = []
+	print(di_list[::-1])
+	for index, capitle in enumerate(di_list[::-1]):
+		#sleep(2)
+		cap_name = capitle[0].replace("\n", "").strip()
+		cap_url = capitle[1].replace("\n", "").strip()
+		print(cap_name)
+		#printt(capitle)
+		raw_cap = scraper.get(url=cap_url)
+		raw_cap.encoding = "utf-8"
 		raw_cap_tree = fromstring(html=raw_cap.content)
-		exec(f'cap_{index} = epub.EpubHtml(title=capitle[0], file_name=f"{capitle[0]}.xhtml")')
-		inde.append(epub.Link(f"{capitle[0]}.xhtml", capitle[0], "arbol"))
-		caps.append(f"cap_{index}")
-		cap_text = raw_cap_tree.xpath('//*[@class="text-left"]')[0].text_content()
-		exec(f'cap_{index}.content = {cap_text}')
+		#f'cap_{index} = epub.EpubHtml(title="{cap_name}", file_name="{cap_name}.xhtml")'
+		caps[cap_name] = epub.EpubHtml(title=cap_name, file_name=f"{cap_name}.xhtml")
+		caps[cap_name].content = raw_cap_tree.xpath('//*[@class="text-left"]')[0].text_content().strip("\n").strip()
+		#inde.append(epub.Link(f"{cap_name}.xhtml", cap_name, "arbol"))
+		#caps.append(f"cap_{index}")
 
-		bu.add_item(f"cap_{index}")
+		#cap_text = raw_cap_tree.xpath('//*[@class="text-left"]')[0].text_content().strip("\n")
+		#print(b"{cap_text}")
+		#print(f'cap_{index}.content = "index in dex"')
+		#to_exec = f"cap_{index}.content = '{cap_text}'"
+		#exec(to_exec)
 
+		#bu.add_item(f"cap_{index}")
+	print(caps)
+	toc_aux = ()
+	spi = []
+	for cap in caps.keys():
+		spi.append(caps[cap])
+		bu.add_item(caps[cap])
+		print(f"cap -> '{cap}.xhtml', {cap}, 'tree'")
+		toc_aux += (epub.Link(f"{cap}.xhtml", cap, "tree"),)
+
+	bu.toc = toc_aux
 	bu.add_item(epub.EpubNcx())
 	bu.add_item(epub.EpubNav())
-	bu.toc = tuple(inde)
-	print(tuple(inde))
-	print(["cover"] + caps)
+	#print(tuple(inde))
+	#print(["cover"] + caps)
 	#bu.toc = (epub.Link("chap_195.xhtml", "chap_195", "arbol"),)
 	style = 'BODY {color: white;}'
 	nav_css = epub.EpubItem(uid="style_nav", file_name="style/nav.css", media_type="text/css", content=style)
 	bu.add_item(nav_css)
 
-	bu.spine = ["cover"] + caps
-
+	bu.spine = ["cover"] + spi
+	print()
+	print(bu.spine)
+	print(bu.toc)
 	epub.write_epub("vida.epub", bu)
-	bot.send_document(chat_id=chatId, document=open(file="./vida.epub", mode="rb"))
+	print("enviado....")
+	#bot.send_document(chat_id=chatId, document=open(file="./vida.epub", mode="rb"))
 
 
 	#raw_page = scraper.get(url=)
