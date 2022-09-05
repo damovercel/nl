@@ -3,7 +3,7 @@
 from telegram import InputMediaPhoto
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 from os import environ, mkdir
-from lxml.html import fromstring
+from lxml.html import fromstring, tostring
 from time import sleep
 from json import load
 from cloudscraper import create_scraper
@@ -62,15 +62,16 @@ def command_demo(update, context):
 	di_list = []
 	ord_list = []
 	for ind, element in enumerate(raw_tree.xpath('//*[@class="main version-chap no-volumn"]')[0]):
-		if ind > 2:
-			continue
+		#if ind > 2:
+			#continue
 		print(element)
 		#printt(element)
 		if element.tag == "li":
 			if "wp-manga-chapter" in element.attrib["class"]:
 				a = element.xpath('.//a')[0]
 				di_list.append([a.text, a.attrib["href"]])
-				#printt(a.text, a.attrib["href"])
+				if ind % 25 == 0:
+					printt(a.text)
 	from ebooklib import epub
 
 	bu = epub.EpubBook()
@@ -92,8 +93,15 @@ def command_demo(update, context):
 		raw_cap.encoding = "utf-8"
 		raw_cap_tree = fromstring(html=raw_cap.content)
 		#f'cap_{index} = epub.EpubHtml(title="{cap_name}", file_name="{cap_name}.xhtml")'
+		this_cap = ""
+		for child in raw_cap_tree.xpath('//*[@class="text-left"]')[0].getchildren():
+			print(raw_cap_tree.xpath('//*[@class="text-left"]')[0].getchildren())
+			if not child.text_content().isspace():
+				this_cap += tostring(child, encoding="unicode").strip("\n").strip()#.replace("<p> </p>", "")
 		caps[cap_name] = epub.EpubHtml(title=cap_name, file_name=f"{cap_name}.xhtml")
-		caps[cap_name].content = raw_cap_tree.xpath('//*[@class="text-left"]')[0].text_content().strip("\n").strip()
+		#caps[cap_name].content = tostring(, encoding="unicode").strip("\n").strip()
+		caps[cap_name].content = this_cap
+		print(caps[cap_name].content)
 		#inde.append(epub.Link(f"{cap_name}.xhtml", cap_name, "arbol"))
 		#caps.append(f"cap_{index}")
 
@@ -124,6 +132,7 @@ def command_demo(update, context):
 	bu.add_item(nav_css)
 
 	bu.spine = ["cover"] + spi
+	#bu.spine = spi
 	print()
 	print(bu.spine)
 	print(bu.toc)
