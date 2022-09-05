@@ -83,7 +83,9 @@ def command_demo(update, context):
 	caps = {}
 	#inde = []
 	print(di_list[::-1])
-	for index, capitle in enumerate(di_list[::-1]):
+	for index, capitle in enumerate(di_list[::-1]):		
+		if index % 25 == 0:
+			printt(index)
 		#sleep(2)
 		cap_name = capitle[0].replace("\n", "").strip()
 		cap_url = capitle[1].replace("\n", "").strip()
