@@ -138,7 +138,7 @@ def command_demo(update, context):
 	print(bu.toc)
 	epub.write_epub("vida.epub", bu)
 	print("enviado....")
-	#bot.send_document(chat_id=chatId, document=open(file="./vida.epub", mode="rb"))
+	bot.send_document(chat_id=chatId, document=open(file="./vida.epub", mode="rb"))
 
 
 	#raw_page = scraper.get(url=)
