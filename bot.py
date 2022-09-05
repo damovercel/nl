@@ -72,6 +72,7 @@ def command_demo(update, context):
 				di_list.append([a.text, a.attrib["href"]])
 				if ind % 25 == 0:
 					printt(a.text)
+					sleep(3)
 	from ebooklib import epub
 
 	bu = epub.EpubBook()
@@ -86,6 +87,7 @@ def command_demo(update, context):
 	for index, capitle in enumerate(di_list[::-1]):		
 		if index % 25 == 0:
 			printt(index)
+			sleep(2)
 		#sleep(2)
 		cap_name = capitle[0].replace("\n", "").strip()
 		cap_url = capitle[1].replace("\n", "").strip()
